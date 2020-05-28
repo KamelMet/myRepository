@@ -45,3 +45,37 @@ build_and_delivery:
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   only:
     - master
+
+# On va ici juste deployer en poussant une image dans docker registry
+deploy_prod:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:staging" .
+    - docker push "$CI_REGISTRY_IMAGE:staging"
+  environment:
+    name: staging
+    url: https://example.com
+  only:
+    - master
+
+  deploy_prod:
+    stage: deploy
+    image: docker:latest
+    services:
+      - docker:dind
+    before_script:
+      - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    script:
+      - docker build --pull -t "$CI_REGISTRY_IMAGE:prod" .
+      - docker push "$CI_REGISTRY_IMAGE:prod"
+    environment:
+      name: production
+      url: https://example.com
+    when: manual
+    only:
+      - master
