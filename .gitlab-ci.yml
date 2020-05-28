@@ -23,7 +23,7 @@ unittest:
 #     - make lint
 
 coverage:
-  extends: test
+  extends: unittest
   script:
     - pip install pytest-cov
     - pytest --cov=basicmlapp tests/unit_tests/
