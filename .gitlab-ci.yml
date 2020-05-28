@@ -1,0 +1,47 @@
+stages:
+  - test
+  - deploy
+
+image: python:3
+
+# TEST STAGE
+
+# Template to run code in the pyproject folder
+test:
+  stage: test
+  before_script:
+    - make init
+    - source activate.sh
+    - make install-dev
+    - export CORRECTION_SETTINGS_MODULE=correction.settings.dev
+  script:
+    - make tests
+
+check linting:
+  extends: test
+  script:
+    - make lint
+
+create doc:
+  extends: test
+  script:
+    - make doc
+
+make coverage:
+  extends: test
+  script:
+    - make coverage
+  coverage: "/TOTAL.+ ([0-9]{1,3}%)/" # This parses the coverage log to display coverage into gitlab
+
+  ## DEPLOY
+
+deploy:
+  stage: deploy
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - bash .gitlab-deploy.sh
+  when: manual

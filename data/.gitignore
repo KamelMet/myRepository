@@ -1,0 +1,9 @@
+*.txt
+*.csv
+*.pickle
+*.joblib
+*.pkl
+*.xls
+*.xlsx
+*.json
+!raw/iris.csv
