@@ -47,7 +47,8 @@ build_and_delivery:
     - master
 
 # On va ici juste deployer en poussant une image dans docker registry
-deploy_prod:
+# mais on pourrait déployer l'image sur n'importe quel environment
+deploy_staging:
   stage: deploy
   image: docker:latest
   services:
