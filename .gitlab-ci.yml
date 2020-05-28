@@ -34,7 +34,7 @@ coverage:
 #     - make lint
 
 build_and_delivery:
-  stage: build
+  stage: build_and_delivery
   image: docker:latest
   services:
     - docker:dind
