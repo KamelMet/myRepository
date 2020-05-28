@@ -23,7 +23,7 @@ coverage:
   extends: unittest
   script:
     - pip install pytest-cov
-    - pytest --cov=basicmlapp tests/unit_tests/ | tee coverage/coverage.txt
+    - pytest --cov=basicmlapp tests/unit_tests/
   coverage: "/TOTAL.+ ([0-9]{1,3}%)/" # This parses the coverage log to display coverage into gitlab
   only:
     - master
@@ -34,15 +34,10 @@ coverage:
 #   script:
 #     - make lint
 
-# build:
-#   stage: build
-#   before_script:
-#     - python3 -m venv .venv
-#     - source .venv/bin/activate
-#     - pip install -U pip
-#     - export PYTHONPATH="$PYTHONPATH:$(pwd)"
-#     - pip install -r requirements.txt
-#   script:
-#     - pytest -s tests/unit_tests/
-#   only:
-#     - master
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - docker build -t basic_ml_app .
+  only:
+    - master
