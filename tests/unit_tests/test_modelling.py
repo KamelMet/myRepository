@@ -10,7 +10,7 @@ from basicmlapp.modelling import gridsearch, train_model
 
 def test_train_model(sample_df):
     # TODO: mock gridsearch
-    fitted_clf = train_model(sample_df, "random_forest")
+    fitted_clf = train_model(sample_df)
     for step in fitted_clf.steps:
         assert check_is_fitted(fitted_clf[1]) is None
     assert isinstance(fitted_clf, Pipeline)

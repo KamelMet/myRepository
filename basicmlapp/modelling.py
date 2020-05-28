@@ -1,4 +1,5 @@
 import logging
+import os
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -9,7 +10,6 @@ from sklearn.model_selection import GridSearchCV
 
 from basicmlapp import settings
 
-
 def train_model(df, method):
     X = df.drop(settings.target_feature, axis=1)
     y = df[settings.target_feature].values.ravel()
@@ -17,6 +17,7 @@ def train_model(df, method):
     fitted_clf = gridsearch(X, y, clf, settings.paramgrid, settings.cv)
     logging.info(f"Score: {fitted_clf.best_score_}")
     logging.info(f"Hyperparameters: {fitted_clf.best_params_}")
+
 
     return fitted_clf.best_estimator_
 
@@ -26,8 +27,7 @@ def make_preprocessor(numeric_features, categorical_features):
         steps=[("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]
     )
     categorical_transformer = Pipeline(
-        steps=[
-            ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
+        steps=[("imputer", SimpleImputer(strategy= "constant", fill_value="missing")),
             ("onehot", OneHotEncoder(handle_unknown="ignore")),
         ]
     )
@@ -40,17 +40,12 @@ def make_preprocessor(numeric_features, categorical_features):
     return preprocessor
 
 
-def make_pipeline(numeric_features, categorical_features, method):
-    if method == "random_forest":
-        classifier = RandomForestClassifier()
+def make_pipeline(numeric_features,categorical_features, method):
+    if method == "random_forest":classifier = RandomForestClassifier()
     elif method == "decision_tree":
         classifier = DecisionTreeClassifier()
     else:
-        logging.error(
-            "Specified method not yet available: {}. Available methods are :".format(
-                method, settings.available_methods
-            )
-        )
+        logging.error("Specified method not yet available: {}. Available methods are :".format(method, settings.available_methods))
     clf = Pipeline(
         steps=[
             ("preprocessor", make_preprocessor(numeric_features, categorical_features)),
