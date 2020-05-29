@@ -33,51 +33,51 @@ coverage:
 #   script:
 #     - make lint
 
-# build_and_delivery:
-#   stage: build_and_delivery
-#   image: docker:latest
-#   services:
-#     - docker:dind
-#   before_script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#   script:
-#     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-#     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-#   only:
-#     - master
+build_and_delivery:
+  stage: build_and_delivery
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  only:
+    - master
 
 # On va ici juste deployer en poussant une image dans docker registry
 # mais on pourrait déployer l'image sur n'importe quel environment
 # exemple dans .gitlab-deploy.sh pour deployement EC2
-# deploy_staging:
-#   stage: deploy
-#   image: docker:latest
-#   services:
-#     - docker:dind
-#   before_script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#   script:
-#     - docker build --pull -t "$CI_REGISTRY_IMAGE:staging" .
-#     - docker push "$CI_REGISTRY_IMAGE:staging"
-#   environment:
-#     name: staging
-#     url: https://example.com
-#   only:
-#     - master
-#
-# deploy_prod:
-#   stage: deploy
-#   image: docker:latest
-#   services:
-#     - docker:dind
-#   before_script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#   script:
-#     - docker build --pull -t "$CI_REGISTRY_IMAGE:prod" .
-#     - docker push "$CI_REGISTRY_IMAGE:prod"
-#   environment:
-#     name: production
-#     url: https://example.com
-#   when: manual
-#   only:
-#     - master
+deploy_staging:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:staging" .
+    - docker push "$CI_REGISTRY_IMAGE:staging"
+  environment:
+    name: staging
+    url: https://example.com
+  only:
+    - master
+
+deploy_prod:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:prod" .
+    - docker push "$CI_REGISTRY_IMAGE:prod"
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+  only:
+    - master
