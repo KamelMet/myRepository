@@ -1,3 +1,3 @@
-# formation_cleancode_devops_20200531
+# formation_cleancode_devops_20210907
 
-Copyright : 2020, Formation Big Data
+Copyright : 2021, Formation Quantmetry
