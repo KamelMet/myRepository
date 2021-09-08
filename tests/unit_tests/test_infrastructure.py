@@ -10,7 +10,7 @@ test_file_1 = os.path.join(test_data_dir, 'test_data.csv')
 test_file_2 = os.path.join(test_data_dir, 'test_data_dont_exist.csv')
 
 
-@pytest.mark.parametrize("file_path, expected", [(test_file_1, 8), (test_file_2, 0)])
+@pytest.mark.parametrize("file_path, expected", [(test_file_1, 12), (test_file_2, 0)])
 def test_load_train_data(monkeypatch, file_path, expected):
     def mock_path_join(data_dir, file_name):
         return file_path
